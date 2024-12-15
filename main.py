@@ -355,7 +355,6 @@ if __name__ == "__main__":
                             WHITE
                     )
                     highlight_rect.draw(screen, 2)
-                    # selected_ship.draw(screen)
                     if hovered_cell:   # hover effect
                         hover_rect = hovered_cell.copy()
                         hover_rect.width = selected_ship.rect.width
