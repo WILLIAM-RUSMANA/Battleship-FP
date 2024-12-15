@@ -7,17 +7,20 @@ SCREEN_HEIGHT = 850
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
+BLUE = (33, 19, 235)
+RED = (225, 34, 34)
 GRAY = (200, 200, 200)
 GREEN = (0, 255, 0)
 OCEAN_BLUE = (21,127,233)
 WHITE_GRAY = (240, 240, 240)
+YELLOW = (255, 255, 0)
+DARK_YELLOW = (214, 186, 24)
+
 
 GRID_SIZE = 10
 CELL_SIZE = 50     # Directly proportional to the amouont of ships 5 ships: 50
-GRID_OFFSET_X = 50
-GRID_OFFSET_Y = 100
+
+TIME_PER_TURN =  15 # in seconds
 
 # Ship configurations
 SHIPS = {
@@ -53,5 +56,10 @@ SHIP_IMAGES = {
     }
 }
 
-GRID_LEFT_TOP_RED = (50, 50)
-GRID_LEFT_TOP_BLUE = (850, 50)
+ARROWS = {
+    "red": pygame.image.load(os.path.join("assets", "img", "red arrow.png")),
+    "blue": pygame.image.load(os.path.join("assets", "img", "blue arrow.png"))
+}
+
+GRID_LEFT_TOP_RED = (50, 70)
+GRID_LEFT_TOP_BLUE = (850, 70)

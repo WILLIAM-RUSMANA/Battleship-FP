@@ -1,5 +1,5 @@
 import pygame
-from constants import GRID_SIZE, CELL_SIZE, WHITE_GRAY, SHIP_IMAGES, RED, BLUE, SHIPS
+from constants import GRID_SIZE, CELL_SIZE, WHITE_GRAY, SHIP_IMAGES, RED, GREEN, SHIPS
 
 pygame.mixer.init()
 boom_sound = pygame.mixer.Sound("assets/audio/BOOM.mp3")
@@ -14,7 +14,21 @@ class Rectangle(object):
             pygame.draw.rect(screen, self.color, self.rect, weight)
         else:
             pygame.draw.rect(screen, self.color, self.rect)
+
+class Timer_display(Rectangle):
+    def __init__(self, x, y, width, height, color, text_color=GREEN, font_size=60):
+        super().__init__(x, y, width, height, color)
+        self.font = pygame.font.Font(None, font_size)
+        self.text_color = text_color
     
+    def draw(self, screen, current_time) -> None:
+        current_time_str = str(current_time)
+        if current_time <= 3:
+            text_surf = self.font.render(current_time_str, True, RED)
+        else:
+            text_surf = self.font.render(current_time_str, True, self.text_color)
+        text_rect = text_surf.get_rect(center=self.rect.center)
+        screen.blit(text_surf, text_rect)
 
 class Button(Rectangle):
     def __init__(self, x, y, width, height, text, text_color, color, hover_color, text_hover_color, action = None):
@@ -47,15 +61,16 @@ class Button(Rectangle):
         return False
 
 class Grid(object):
-    def __init__(self, rows, cols, cell_size, top_left):
+    def __init__(self, rows, cols, cell_size, top_left, color=WHITE_GRAY):
         self.grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
         self.rows = rows
         self.cols = cols
         self.cell_size = cell_size
         self.top_left = top_left
+        self.color = color
         self.rects = [
             [pygame.Rect(
-                top_left[0] + x * cell_size, top_left[1] + y * cell_size, cell_size, cell_size
+                (top_left[0] + x * cell_size), (top_left[1] + y * cell_size), cell_size, cell_size
             )
             for x in range(cols)]
             for y in range(rows)
@@ -69,10 +84,21 @@ class Grid(object):
             "Submarine": 3, # 32 
             "Destroyer": 2
         }
+    def reset(self):
+        self.grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+        self.ship_log = []
+        self.eliminated_squares = []
+        self.ship_health = {
+            "Carrier": 5,
+            "Battleship": 4,  #TODO: fix for testing
+            "Cruiser": 3,   # 31
+            "Submarine": 3, # 32 
+            "Destroyer": 2
+        }
     def insert(self, screen):
         for row in self.rects:
             for rect in row:
-                pygame.draw.rect(screen, WHITE_GRAY, rect, 1)
+                pygame.draw.rect(screen, self.color, rect, 1)
     
     def get_hovered_cell(self, mouse_pos, size_selected, orientation, identifier = None,clicked = False) -> pygame.Rect:  # only gets when MOUSEBUTTONDOWN
         # TODO: Fix so that there will be no intersection with other ships
