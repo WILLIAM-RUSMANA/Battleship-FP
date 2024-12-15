@@ -5,7 +5,13 @@ Battleship is a fun classic where two or more players go against each other in a
 
 
 ## Running The Program
-To install battleship you need python 3, I recommend python 3.7 and above\n [here](https://www.python.org/downloads/).
+To install battleship you need python 3, I recommend python 3.7 and above. Download python [here](https://www.python.org/downloads/).
+
+Once you have python 3 or above, get the pygame libary by enter this command in the terminal
+`python -m pip install pygame`
+
+Next, clone this repository of download as zip file, which you can unzip using [7zip](https://www.7-zip.org/)
+![] (/assets)
 
 Lastly, all you need to run this program is to run the main.py file.
 
