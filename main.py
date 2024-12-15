@@ -101,6 +101,26 @@ if __name__ == "__main__":
         for rect in rect_list:
             pygame.draw.rect(screen, color, rect)
 
+    def next_game_reset():
+        global start_game, display_winner, fp_setup, sp_setup, round_start, nuke,red_nuke, blue_nuke, red_score, blue_score, round, red_ships, blue_ships, red_deployed, blue_deployed, deployed_ships, current_player
+        start_game = True
+        display_winner = False  # break from current loop
+        fp_setup = True
+        sp_setup = True
+        round_start = False
+        nuke = "deactive"
+        red_nuke = True
+        blue_nuke = True
+        red_score = 0
+        blue_score = 0
+        round = 0
+        red_ships = RED_SHIP_CONSTANT.copy()
+        blue_ships = BLUE_SHIP_CONSTANT.copy()
+        red_deployed = []
+        blue_deployed = []
+        deployed_ships = []
+        current_player = "red"
+
     # load sounds
     intro_sound = pygame.mixer.Sound("assets/audio/goodDayToDie.mp3")
     ocean_sound = pygame.mixer.Sound("assets/audio/ocean.mp3")
@@ -603,42 +623,10 @@ if __name__ == "__main__":
                     # Play again conditional
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
-                            start_game = True
-                            display_winner = False  # break from current loop
-                            fp_setup = True
-                            sp_setup = True
-                            round_start = False
-                            nuke = "deactive"
-                            red_nuke = True
-                            blue_nuke = True
-                            red_score = 0
-                            blue_score = 0
-                            round = 0
-                            red_ships = RED_SHIP_CONSTANT.copy()
-                            blue_ships = BLUE_SHIP_CONSTANT.copy()
-                            red_deployed = []
-                            blue_deployed = []
-                            deployed_ships = []
-                            current_player = "red"
+                            next_game_reset()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if play_again_button.is_clicked(event, screen):
-                            start_game = True
-                            display_winner = False  # break from current loop
-                            fp_setup = True
-                            sp_setup = True
-                            round_start = False
-                            nuke = "deactive"
-                            red_nuke = True
-                            blue_nuke = True
-                            red_score = 0
-                            blue_score = 0
-                            round = 0
-                            red_ships = RED_SHIP_CONSTANT.copy()
-                            blue_ships = BLUE_SHIP_CONSTANT.copy()
-                            red_deployed = []
-                            blue_deployed = []
-                            deployed_ships = []
-                            current_player = "red"
+                            next_game_reset()
                 for ship in red_ships:
                     ship.reset()
                 for ship in blue_ships:

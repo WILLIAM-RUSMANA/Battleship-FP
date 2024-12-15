@@ -214,10 +214,10 @@ class Grid(object):
         for ship in self.ship_log:
             x, y, ship_size, orientation, identifier = ship
             try:
-                if orientation == "horizontal": # ship[3] is the orientation
-                    for i in range(ship_size): # ship[2] is the ship size
+                if orientation == "horizontal":
+                    for i in range(ship_size):
                         self.grid[y][x + i] = identifier
-                else:    # if vertical
+                elif orientation == "vertical":
                     for i in range(ship_size):
                         self.grid[y + i][x] = identifier
             except Exception as e:
