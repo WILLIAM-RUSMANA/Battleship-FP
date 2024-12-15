@@ -262,7 +262,7 @@ class Battleship:
     def draw(self, screen) -> None:
         # Use image instead of rectangle
         pygame.draw.rect(screen, self.color, self.rect)
-        ship_name = list(SHIPS.keys()) [list(SHIPS.values()).index(self.identifier)]  # Turn ship keys into list then use the to find it's index
+        ship_name = list(SHIPS.keys()) [list(SHIPS.values()).index(self.identifier)]  # Turn ship keys into list then use the index of the value to find it's index
         image = SHIP_IMAGES[self.orientation][ship_name]
         screen.blit(image, self.rect)
     

@@ -16,13 +16,11 @@ if __name__ == "__main__":
     pygame.mixer.init()
     pygame.font.init()
 
-    # variables
-    deployed_ships = [] # reset the deployed ships list
     ship_orientation = "horizontal"  # or "vertical"
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Battleship Game")
 
-    # rescale images
+    # rescale images of ships and arrows
     for orientation in SHIP_IMAGES:
         for ship in SHIP_IMAGES[orientation]:
             if orientation == "horizontal":
@@ -33,14 +31,14 @@ if __name__ == "__main__":
     ARROWS["red"] = pygame.transform.scale(ARROWS["red"], (150, 150))
     ARROWS["blue"] = pygame.transform.scale(ARROWS["blue"], (150, 150))
 
+    # constants for default ship positions
     RED_SHIP_CONSTANT = [
         Battleship(2, (600, 70), RED, "Destroyer"),
         Battleship(32, (600, 130), RED, "Submarine"),
         Battleship(31, (600, 190), RED, "Cruiser"),
         Battleship(4, (600, 250), RED, "Battleship"),
-        Battleship(5, (600, 310), RED, "Carrier")  #TODO: fix for testing
+        Battleship(5, (600, 310), RED, "Carrier")  
     ]
-
     BLUE_SHIP_CONSTANT = [
         Battleship(2, (400, 70), BLUE, "Destroyer"),
         Battleship(32, (400, 130), BLUE, "Submarine"),
@@ -57,17 +55,20 @@ if __name__ == "__main__":
     red_score = 0
     blue_score = 0
 
+    # turn change counter incremented by 0.5
     round = 0
 
-    nuke = "deactive"
-    red_nuke = True
-    blue_nuke = True
 
+
+    # Initialize grids and ships
     red_grid = Grid(GRID_SIZE, GRID_SIZE, CELL_SIZE, GRID_LEFT_TOP_RED)
     red_ships = RED_SHIP_CONSTANT.copy()
 
     blue_grid = Grid(GRID_SIZE, GRID_SIZE, CELL_SIZE, GRID_LEFT_TOP_BLUE)
     blue_ships = BLUE_SHIP_CONSTANT.copy()
+
+    # variables
+    deployed_ships = [] # list of ships placed on grid
 
     selected_ship = None
     deployed_ships = []
@@ -80,28 +81,36 @@ if __name__ == "__main__":
     blue_deployed = []
     red_deployed = []
 
+    # Nuke default state
+    nuke = "deactive"
+    red_nuke = True
+    blue_nuke = True
+
     # Helper functions
-    def clear_screen(screen):
+    def clear_screen(screen) -> None:
         screen.fill(OCEAN_BLUE)
 
-    def activate_nuke(screen):
+    def activate_nuke(screen) -> None:
+        # activate and deactive nuke accordingly
         global nuke
         if nuke == "deactive":
             nuke = "active"
         else:
             nuke = "deactive"
 
-    def start_setup(grid, complete_button, rotate_button, reset_button):
+    def start_setup(grid: Grid, complete_button: Button, rotate_button: Button, reset_button: Button) -> None:
+        # For setup phase, inserts grid, complete button, rotate button and reset button
         grid.insert(screen)
         complete_button.draw(screen)
         rotate_button.draw(screen)
         reset_button.draw(screen)
 
-    def draw_rect_list(screen, rect_list, color):
+    def draw_rect_list(screen, rect_list, color:tuple[int, int, int]) -> None:
+        # for hover effect
         for rect in rect_list:
             pygame.draw.rect(screen, color, rect)
 
-    def next_game_reset():
+    def next_game_reset() -> None:  # reset variables for another game
         global start_game, display_winner, fp_setup, sp_setup, round_start, nuke,red_nuke, blue_nuke, red_score, blue_score, round, red_ships, blue_ships, red_deployed, blue_deployed, deployed_ships, current_player
         start_game = True
         display_winner = False  # break from current loop
@@ -129,7 +138,7 @@ if __name__ == "__main__":
     click_sound = pygame.mixer.Sound("assets/audio/release.mp3")
     beep_sound = pygame.mixer.Sound("assets/audio/beep.mp3")
 
-    intro_sound.play(loops=-1)
+    intro_sound.play(loops=-1)  # play good day to die in a loop
 
     start_game = False
     quit = False
@@ -175,25 +184,26 @@ if __name__ == "__main__":
 
                     if event.type == pygame.MOUSEBUTTONDOWN: 
                         mouse_pos = pygame.mouse.get_pos()
-                        if not red_ships:
-                            fp_setup = not complete_button.is_clicked(event, screen)  # Will return true if it's clicked
-                            if not fp_setup:
+                        if not red_ships:  # check if all ships are deployed
+                            fp_setup = not complete_button.is_clicked(event, screen)  # Will return true if clicked
+                            if not fp_setup: # if first player setup is complete
                                 click_sound.play()
-                                red_deployed = deployed_ships
-                        if rotate_button.is_clicked(event, screen):  # rotate the ships is the red_ship array
+                                red_deployed = deployed_ships  # copy deployed ships for later
+                        if rotate_button.is_clicked(event, screen):  # return true if rotate button is clicked
                             click_sound.play()
                             for ship in red_ships:
-                                ship.rotate()
+                                ship.rotate()  # rotate the ships is the red_ship array
+                            # change ship orienation accoridngly
                             if ship_orientation == "horizontal":
                                 ship_orientation = "vertical"
                             else:
                                 ship_orientation = "horizontal"
-                        for ship in red_ships: # select a battleship
+                        for ship in red_ships: # loop to check if a ship is clicked
                             if ship.rect.collidepoint(mouse_pos):
-                                selected_ship = ship
+                                selected_ship = ship  # select a ship
                                 click_sound.play()
                                 break
-                        if selected_ship:
+                        if selected_ship:  # if a ship is already selected
                             # Deploy the selected ship
                             hovered_cell = red_grid.get_hovered_cell(mouse_pos, selected_ship.size, ship_orientation, selected_ship.identifier, clicked=True)
                             if hovered_cell:
@@ -202,39 +212,41 @@ if __name__ == "__main__":
                                 selected_ship.rect.topleft = hovered_cell.topleft
 
                                 deploy_success = True
-                                for ship in deployed_ships:
+                                for ship in deployed_ships:  # check for collision with deployed ships
                                     if ship.rect.colliderect(selected_ship.rect):
-                                        selected_ship.rect.topleft = ship_left_before
-                                        deploy_success = False
-                                        red_grid.ship_log.pop()  # To remove the appended data of a hover ship that collides with deployed ship
+                                        selected_ship.rect.topleft = ship_left_before  # return the ship to the original position
+                                        deploy_success = False   # Falsify deploy state
+                                        red_grid.ship_log.pop()  # Remove the appended data from ship_log
                                         break
-                                if deploy_success:
+                                if deploy_success: # move ship to deployed ships and make selected ship None again if deployment is successful
                                     deployed_ships.append(selected_ship)
                                     red_ships.remove(selected_ship)
                                     selected_ship = None
                         if reset_button.is_clicked(event, screen):
                             click_sound.play()
-                            red_ships = RED_SHIP_CONSTANT.copy()
-                            deployed_ships = []
+                            red_ships = RED_SHIP_CONSTANT.copy()  # reset red ships
+                            deployed_ships = []  # remove all deployed ships
                             for ship in red_ships:
-                                ship.reset()
+                                ship.reset()  # reset all ships to their default position
                             ship_orientation = "horizontal"
                             red_grid.ship_log = []
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             click_sound.play()
-                            if not red_ships:
+                            if not red_ships: # check if all ships are deployed
                                 fp_setup = False
                                 red_deployed = deployed_ships
                             
 
-                # Draw battleships
+                # Draw ships in their default positions
                 for ship in red_ships:
                     ship.draw(screen)
 
                 # Draw deployed ships
                 for ship in deployed_ships:
                     ship.draw(screen)
+                
+                # TODO: continue comments
                 
                 if selected_ship is not None:  # Hover effect on grid
                     mouse_pos = pygame.mouse.get_pos()
