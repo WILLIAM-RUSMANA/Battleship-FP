@@ -12,6 +12,7 @@ Once you have python 3 or above, get the pygame libary by enter this command in 
 
 Next, clone this repository of download as zip file, which you can unzip using [7zip](https://www.7-zip.org/)
 ![clone code snip](assets/img/clonesnip.png)
+<img src="/assets/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="200" height="200">
 
 Lastly, all you need to run this program is to run the main.py file.
 
