@@ -42,11 +42,11 @@ if __name__ == "__main__":
     ]
 
     BLUE_SHIP_CONSTANT = [
-        Battleship(2, (650, 70), BLUE, "Destroyer"),
+        Battleship(2, (600, 70), BLUE, "Destroyer"),
         Battleship(32, (600, 130), BLUE, "Submarine"),
         Battleship(31, (600, 190), BLUE, "Cruiser"),
-        Battleship(4, (550, 250), BLUE, "Battleship"),
-        Battleship(5, (500, 310), BLUE, "Carrier")
+        Battleship(4, (600, 250), BLUE, "Battleship"),
+        Battleship(5, (600, 310), BLUE, "Carrier")
     ]
     # Current player
     current_player = "red"
