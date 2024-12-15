@@ -103,12 +103,12 @@ if __name__ == "__main__":
 
     # load sounds
     intro_sound = pygame.mixer.Sound("assets/audio/goodDayToDie.mp3")
-    boom_sound = pygame.mixer.Sound("assets/audio/boom.mp3")
     ocean_sound = pygame.mixer.Sound("assets/audio/ocean.mp3")
     champion_sound = pygame.mixer.Sound("assets/audio/champion.mp3")
     draw_sound = pygame.mixer.Sound("assets/audio/draw.mp3")
+    click_sound = pygame.mixer.Sound("assets/audio/release.mp3")
+    beep_sound = pygame.mixer.Sound("assets/audio/beep.mp3")
 
-    boom_sound.set_volume(1)
     intro_sound.play(loops=-1)
 
     start_game = False
@@ -128,8 +128,11 @@ if __name__ == "__main__":
                 quit = True
             elif event.type == pygame.MOUSEBUTTONDOWN:  # check if button is down
                 start_game = play_button.is_clicked(event, screen)
+                if start_game:
+                    click_sound.play()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    click_sound.play()
                     start_game = True
         
         pygame.display.update()
@@ -155,8 +158,10 @@ if __name__ == "__main__":
                         if not red_ships:
                             fp_setup = not complete_button.is_clicked(event, screen)  # Will return true if it's clicked
                             if not fp_setup:
+                                click_sound.play()
                                 red_deployed = deployed_ships
                         if rotate_button.is_clicked(event, screen):  # rotate the ships is the red_ship array
+                            click_sound.play()
                             for ship in red_ships:
                                 ship.rotate()
                             if ship_orientation == "horizontal":
@@ -166,26 +171,29 @@ if __name__ == "__main__":
                         for ship in red_ships: # select a battleship
                             if ship.rect.collidepoint(mouse_pos):
                                 selected_ship = ship
+                                click_sound.play()
                                 break
                         if selected_ship:
                             # Deploy the selected ship
                             hovered_cell = red_grid.get_hovered_cell(mouse_pos, selected_ship.size, ship_orientation, selected_ship.identifier, clicked=True)
                             if hovered_cell:
+                                click_sound.play()
                                 ship_left_before = selected_ship.rect.topleft
                                 selected_ship.rect.topleft = hovered_cell.topleft
 
-                                make_none = True
+                                deploy_success = True
                                 for ship in deployed_ships:
                                     if ship.rect.colliderect(selected_ship.rect):
                                         selected_ship.rect.topleft = ship_left_before
-                                        make_none = False
+                                        deploy_success = False
                                         red_grid.ship_log.pop()  # To remove the appended data of a hover ship that collides with deployed ship
                                         break
-                                if make_none:
+                                if deploy_success:
                                     deployed_ships.append(selected_ship)
                                     red_ships.remove(selected_ship)
                                     selected_ship = None
                         if reset_button.is_clicked(event, screen):
+                            click_sound.play()
                             red_ships = RED_SHIP_CONSTANT.copy()
                             deployed_ships = []
                             for ship in red_ships:
@@ -194,6 +202,7 @@ if __name__ == "__main__":
                             red_grid.ship_log = []
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
+                            click_sound.play()
                             if not red_ships:
                                 fp_setup = False
                                 red_deployed = deployed_ships
@@ -247,9 +256,11 @@ if __name__ == "__main__":
                         if not blue_ships:
                             sp_setup = not complete_button.is_clicked(event, screen)
                             if not sp_setup:
+                                click_sound.play()
                                 round_start = True
                                 blue_deployed = deployed_ships
                         if rotate_button.is_clicked(event, screen):  # rotate the ships is the red_ship array
+                            click_sound.play()
                             for ship in blue_ships:
                                 ship.rotate()
                             if ship_orientation == "horizontal":
@@ -258,27 +269,30 @@ if __name__ == "__main__":
                                 ship_orientation = "horizontal"
                         for ship in blue_ships: # select a battleship
                             if ship.rect.collidepoint(mouse_pos):
+                                click_sound.play()
                                 selected_ship = ship
                                 break
                         if selected_ship:
                             # Deploy the selected ship
                             hovered_cell = blue_grid.get_hovered_cell(mouse_pos, selected_ship.size, ship_orientation, selected_ship.identifier, clicked=True)
                             if hovered_cell:
+                                click_sound.play()
                                 ship_left_before = selected_ship.rect.topleft
                                 selected_ship.rect.topleft = hovered_cell.topleft
 
-                                make_none = True
+                                deploy_success = True
                                 for ship in deployed_ships:    # check for collision with deployed ships
                                     if ship.rect.colliderect(selected_ship.rect):
                                         selected_ship.rect.topleft = ship_left_before   # return the ship to the original position
-                                        make_none = False
+                                        deploy_success = False    # cancels deployment to not append to deployed ships
                                         blue_grid.ship_log.pop()  # To remove the appended data of a hover ship that collides with deployed ship
                                         break
-                                if make_none:
+                                if deploy_success:
                                     deployed_ships.append(selected_ship)
                                     blue_ships.remove(selected_ship)
                                     selected_ship = None
                         if reset_button.is_clicked(event, screen):
+                            click_sound.play()
                             blue_ships = BLUE_SHIP_CONSTANT.copy()
                             deployed_ships = []
                             for ship in blue_ships:
@@ -287,6 +301,7 @@ if __name__ == "__main__":
                             blue_grid.ship_log = []
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
+                            click_sound.play()
                             if not blue_ships:
                                 sp_setup = False
                                 round_start = True
@@ -372,11 +387,13 @@ if __name__ == "__main__":
                     red_timer = TIME_PER_TURN
                     turn_start_time = pygame.time.get_ticks()
                     round += 0.5
+                    nuke = "deactive"
                 elif display_blue_timer <= 0:
                     current_player = "red"
                     blue_timer = TIME_PER_TURN
                     turn_start_time = pygame.time.get_ticks()
                     round += 0.5
+                    nuke = "deactive"
                 
                 red_timer_display = Timer_display(50, 30, 30, 10, RED)
                 blue_timer_display = Timer_display(1300, 30, 30, 10, BLUE)
@@ -442,12 +459,13 @@ if __name__ == "__main__":
                             if current_player == "red":
                                 if nuke_button_red.is_clicked(event,screen):
                                     if red_nuke:
-                                        nuke = "active"
+                                        beep_sound.play()
+
                         if round >= 1.5:
                             if current_player == "blue":
                                 if nuke_button_blue.is_clicked(event, screen):
                                     if blue_nuke:
-                                        nuke = "active"
+                                        beep_sound.play()
 
                         # Check for single missiles and nuke mode
                         if current_player == "red":

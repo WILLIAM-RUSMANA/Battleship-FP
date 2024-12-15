@@ -3,6 +3,7 @@ from constants import GRID_SIZE, CELL_SIZE, WHITE_GRAY, SHIP_IMAGES, RED, GREEN,
 
 pygame.mixer.init()
 boom_sound = pygame.mixer.Sound("assets/audio/BOOM.mp3")
+pew_sound = pygame.mixer.Sound("assets/audio/pew pew.mp3")
 
 class Rectangle(object):
     def __init__(self, x, y, width, height, color):
@@ -159,21 +160,24 @@ class Grid(object):
                     return col, row
         return None
     
-    def remove(self, row_index, col_index):  # y, x
-        if self.grid[row_index][col_index] == 0:   # empty grid
+    def remove(self, row_index, col_index, nuke = False):  # y, x
+        if self.grid[row_index][col_index] == 0:   # empty grid but valid hit
+            if not nuke:
+                pew_sound.play()
+            else:
+                boom_sound.play()
             self.grid[row_index][col_index] = "X"
             self.eliminated_squares.append((row_index, col_index))
-            boom_sound.play()
             return True
         elif isinstance(self.grid[row_index][col_index], str):   # check if it's a string type
             if self.grid[row_index][col_index][0] == "A":   # empty grid
-                return False
+                return False   # invalidates click
             elif self.grid[row_index][col_index] == "X":
                 return False   # makes click invalid
             elif self.grid[row_index][col_index] == "A":
-                return False
+                return False # Invalidates click
             return False
-        else:
+        else:  # valid hits
             self.eliminated_squares.append((row_index, col_index))
             self.hit_ship(self.grid[row_index][col_index])
             self.grid[row_index][col_index] = "A" + str(self.grid[row_index][col_index])  # hit something
@@ -202,7 +206,7 @@ class Grid(object):
             y = 6
         for y_y in range(y, y + 4):
             for x_x in range(x, x+4):
-                self.remove(y_y,x_x)
+                self.remove(y_y,x_x, True)
 
         return True
 
