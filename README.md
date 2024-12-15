@@ -11,7 +11,7 @@ Once you have python 3 or above, get the pygame libary by enter this command in 
 `python -m pip install pygame`
 
 Next, clone this repository of download as zip file, which you can unzip using [7zip](https://www.7-zip.org/)
-![] (/assets)
+![] (https://github.com/WILLIAM-RUSMANA/Battleship-FP/assets/img/clone snip.png)
 
 Lastly, all you need to run this program is to run the main.py file.
 
