@@ -173,7 +173,7 @@ if __name__ == "__main__":
             while fp_setup:   # Red player setup loop
                 clear_screen(screen)  # Background color ocean blue
                 complete_button = Button(600, 600, 216, 100, "<COMPLETE>", WHITE, BLACK, WHITE, BLACK, clear_screen)
-                rotate_button = Button(600, 450, 160, 75, "Rotate", WHITE, BLACK, WHITE, BLACK)
+                rotate_button = Button(600, 450, 160, 75, "ROTATE", WHITE, BLACK, WHITE, BLACK)
                 reset_button = Button(800, 450, 160, 75, "RESET", WHITE, BLACK, WHITE, BLACK)
                 start_setup(red_grid, complete_button, rotate_button, reset_button) # Draw grid, red complete button, rotate button and the reset button
 
@@ -274,7 +274,7 @@ if __name__ == "__main__":
             while sp_setup:   # Blue player setup loop
                 clear_screen(screen)  # Background color ocean blue
                 complete_button = Button(400, 600, 216, 100, "<COMPLETE>", WHITE, BLACK, WHITE, BLACK, clear_screen)
-                rotate_button = Button(400, 450, 160, 75, "Rotate", WHITE, BLACK, WHITE, BLACK)
+                rotate_button = Button(400, 450, 160, 75, "ROTATE", WHITE, BLACK, WHITE, BLACK)
                 reset_button = Button(600, 450, 160, 75, "RESET", WHITE, BLACK, WHITE, BLACK)
                 start_setup(blue_grid, complete_button, rotate_button, reset_button) # Draw grid, complete button, rotate button and the reset button
 
