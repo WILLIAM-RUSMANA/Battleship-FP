@@ -27,6 +27,10 @@ Next, press the green code button to clone this repository or download as zip fi
 
 Lastly, all you need to run this program is to run the main.py file.
 
+![](assets\img\d1.png)
+![](assets\img\d2.png)
+![](assets\img\d3.png)
+
 Check out the project report [here](BattleshipProjectReport.pdf).
 
 HAVE FUN :)
