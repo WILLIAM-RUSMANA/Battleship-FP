@@ -22,7 +22,7 @@ class Timer_display(Rectangle):    # Child of Rectangle for displaying real time
         self.font = pygame.font.Font(None, font_size)
         self.text_color = text_color
     
-    def draw(self, screen, current_time) -> None:
+    def draw(self, screen, current_time) -> None:  # Draw timer with red or green color
         current_time_str = str(current_time)
         if current_time <= 3:  # Color text RED when timer is less than or equal to 3
             text_surf = self.font.render(current_time_str, True, RED)
@@ -85,7 +85,8 @@ class Grid(object):
             "Submarine": 3, # 32 
             "Destroyer": 2
         }
-    def reset(self):
+
+    def reset(self):  # reset the class variables 
         self.grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
         self.ship_log = []
         self.eliminated_squares = []
@@ -96,13 +97,14 @@ class Grid(object):
             "Submarine": 3, # 32 
             "Destroyer": 2
         }
-    def insert(self, screen):
+    def insert(self, screen):  #  Draw grid on screen
         for row in self.rects:
             for rect in row:
                 pygame.draw.rect(screen, self.color, rect, 1)
     
-    def get_hovered_cell(self, mouse_pos, size_selected, orientation, identifier = None,clicked = False) -> pygame.Rect:  # only gets when MOUSEBUTTONDOWN
-        # TODO: Fix so that there will be no intersection with other ships
+    # Getter method for setup phase that returns hovered Rect object, and appends data to ship_log when clicked
+    def get_hovered_cell(self, mouse_pos, size_selected, orientation, identifier = None,clicked = False) -> pygame.Rect:
+        # only gets when MOUSEBUTTONDOWN
         if orientation == "horizontal":
             for row in range(self.rows):
                 for i in range(self.cols):
@@ -129,7 +131,8 @@ class Grid(object):
                             self.ship_log.append((i, row, size_selected, "vertical", identifier))  # Store as (x, y)
                         return self.rects[row][i]
             return None
-        
+    
+    # Method for battle phase that returns Rect object to display hover effect
     def get_single_hovered_cell(self, mouse_pos)->pygame.Rect:   # The hover function for game play
         for row in range(self.rows):
             for col in range(self.cols):
@@ -137,6 +140,7 @@ class Grid(object):
                     return self.rects[row][col]
         return None
     
+    # Method for battle phase that returns a list of Rect objects to display hover effect
     def get_nuke_hovered_cell(self, mouse_pos)->list[pygame.Rect]:
         for y in range(self.rows):
             for x in range(self.cols):
@@ -153,6 +157,7 @@ class Grid(object):
                     return rects
         return None
     
+    # Method for returning x, y based on mouse position
     def get_x_y(self, mouse_pos):
         for row in range(self.rows):
             for col in range(self.cols):
@@ -160,15 +165,16 @@ class Grid(object):
                     return col, row
         return None
     
+    # Method for appending eliminated Rects onto eliminated_squares list and return bool for player turn state
     def remove(self, row_index, col_index, nuke = False):  # y, x
         if self.grid[row_index][col_index] == 0:   # empty grid but valid hit
-            if not nuke:
+            if not nuke:  # play normal shot sound
                 pew_sound.play()
-            else:
+            else:   # play nuke sound
                 boom_sound.play()
             self.grid[row_index][col_index] = "X"
             self.eliminated_squares.append((row_index, col_index))
-            return True
+            return True # Will change player turn
         elif isinstance(self.grid[row_index][col_index], str):   # check if it's a string type
             if self.grid[row_index][col_index][0] == "A":   # empty grid
                 return False   # invalidates click
@@ -184,21 +190,24 @@ class Grid(object):
             boom_sound.play()
             return False # to loop again if something is hit by single shots
     
+    # Method to find row index and col index of clicked Rect, call remove method and return bool for player change state:
+    #  False-> Stay Current  True -> Change  
     def single_click(self, mouse_pos) -> bool:
         for row_index, row in enumerate(self.rects):
             for col_index, rect in enumerate(row):
                 if rect.collidepoint(mouse_pos):
-                    elimination_stat = self.remove(row_index, col_index)  # false could also mean yes but something is hit so go again
+                    elimination_stat = self.remove(row_index, col_index)  # False could also mean yes but something is hit so go again
                     if elimination_stat:
                         return True
         return False
      
+    # Method to gdt rows and cols of selected Rects using nuke, remove the selected Rects using remove method, and return bool success state
     def nuke_grid(self, mouse_pos) -> bool:
         xy = self.get_x_y(mouse_pos)
         if xy:
             x, y = xy
         else:
-            return False
+            return False  # To terminate early because no valid Rects are selected
         
         if x + 3 >= GRID_SIZE:   # 7 and above will be accepted
             x = 6
@@ -210,6 +219,7 @@ class Grid(object):
 
         return True
 
+    # Method to insert ship identifiers on 2D list ship_log
     def ship_to_grid(self):
         for ship in self.ship_log:
             x, y, ship_size, orientation, identifier = ship
@@ -224,6 +234,7 @@ class Grid(object):
                 print(f"Error processing ship data ship_to_grid: {e}")
                 print(f"ERROR: {e}")
 
+    # Method to decrease ship_health by taking in ship_identifier as input
     def hit_ship(self, ship_identifier) -> None:
         if ship_identifier == 5:
             self.ship_health["Carrier"] -= 1
@@ -235,7 +246,9 @@ class Grid(object):
             self.ship_health["Submarine"] -= 1
         elif ship_identifier == 2:
             self.ship_health["Destroyer"] -= 1
-        
+    
+    # Method to return bool that ends game when health is 0
+    # True -> end game    False -> continue
     def round_over(self):
         total_health = 0
         for ship in self.ship_health:
@@ -244,7 +257,7 @@ class Grid(object):
             return True
         return False
     
-class Battleship:
+class Battleship:  # used in setup phase and winner display phase
     def __init__(self, identifier, horizontal_position, color, ship_type) -> None:
         self.ship_type = ship_type
         self.identifier = identifier
@@ -259,6 +272,7 @@ class Battleship:
         self.orientation = "horizontal"
         self.position = horizontal_position
 
+    # Method to draw Rect and insert ship image on top of it
     def draw(self, screen) -> None:
         # Use image instead of rectangle
         pygame.draw.rect(screen, self.color, self.rect)
@@ -266,6 +280,7 @@ class Battleship:
         image = SHIP_IMAGES[self.orientation][ship_name]
         screen.blit(image, self.rect)
     
+    # Method to rotate Rect object's attributes by changing it's width and height attribute; class varaibles orientation and position
     def rotate(self):
         if self.orientation == "horizontal":
             self.orientation = "vertical"
@@ -276,6 +291,7 @@ class Battleship:
             self.position = self.horizontal_position
             self.rect = pygame.Rect(self.horizontal_position, (self.size * CELL_SIZE, CELL_SIZE))
 
+    # Method to return Rect object to their default position
     def reset(self):
         self.position = self.horizontal_position
         self.vertical_position = (self.horizontal_position[0]-50+self.horizontal_position[1], 100)
