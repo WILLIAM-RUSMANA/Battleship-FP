@@ -187,7 +187,7 @@ class Grid(object):
             self.eliminated_squares.append((row_index, col_index))
             self.hit_ship(self.grid[row_index][col_index])
             self.grid[row_index][col_index] = "A" + str(self.grid[row_index][col_index])  # hit something
-            boom_sound.play()
+            boom_sound.play()  # boom sound if valid hit
             return False # to loop again if something is hit by single shots
     
     # Method to find row index and col index of clicked Rect, call remove method and return bool for player change state:
