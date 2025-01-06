@@ -176,11 +176,11 @@ class Grid(object):
             self.eliminated_squares.append((row_index, col_index))
             return True # Will change player turn
         elif isinstance(self.grid[row_index][col_index], str):   # check if it's a string type
-            if self.grid[row_index][col_index][0] == "A":   # empty grid
+            if self.grid[row_index][col_index][0] == "A":  # Already destroyed ship
                 return False   # invalidates click
-            elif self.grid[row_index][col_index] == "X":
+            elif self.grid[row_index][col_index] == "X":   # empty grid
                 return False   # makes click invalid
-            elif self.grid[row_index][col_index] == "A":
+            elif self.grid[row_index][col_index] == "A": 
                 return False # Invalidates click
             return False
         else:  # valid hits
