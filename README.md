@@ -27,9 +27,7 @@ Next, press the green code button to clone this repository or download as zip fi
 
 Lastly, all you need to run this program is to run the main.py file.
 
-<img src="/assets/img/d1.png" alt="clone code snippet" width="350" height="200">
-<img src="/assets/img/d2.png" alt="clone code snippet" width="350" height="200">
-<img src="/assets/img/d3.png" alt="clone code snippet" width="350" height="200">
+<img src="/assets/img/d1.png" alt="clone code snippet" width="350" height="200"><img src="/assets/img/d2.png" alt="clone code snippet" width="350" height="200"><img src="/assets/img/d3.png" alt="clone code snippet" width="350" height="200">
 
 Check out the project report [here](BattleshipProjectReport.pdf).
 
