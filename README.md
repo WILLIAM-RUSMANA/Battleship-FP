@@ -27,7 +27,7 @@ Next, press the green code button to clone this repository or download as zip fi
 
 Lastly, all you need to run this program is to run the main.py file.
 
-Check out the project report [here](project_report.pdf).
+Check out the project report [here](Battleship Project Report.pdf).
 
 HAVE FUN :)
 
