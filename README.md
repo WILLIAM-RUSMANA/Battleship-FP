@@ -1,7 +1,7 @@
 # Algorithm and Programming - Final Project : MULTIPLAYER BATTLESHIP
 Battleship is a fun classic where two players go against each other in a psychological and strategic battle against each other to destroy all of the opponent's ships. This variation of the classic is a modified fast paced 2 player minimum battleship game
 
-![](battleshipPoster.png)
+<img src="/assets/img/clonesnip.png" alt="clone code snippet" width="297" height="420">
 
 ## Features
 * Fun experience for 2 players or more
