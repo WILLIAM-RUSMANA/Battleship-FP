@@ -5,18 +5,18 @@ pygame.mixer.init()
 boom_sound = pygame.mixer.Sound("assets/audio/BOOM.mp3")
 pew_sound = pygame.mixer.Sound("assets/audio/pew pew.mp3")
 
-class Rectangle(object):
+class Rectangle(object):     # 
     def __init__(self, x, y, width, height, color):
         self.rect = pygame.Rect(x, y, width, height)
         self.color = color
 
     def draw(self, screen, weight=None) -> None:
-        if weight is not None:
+        if weight is not None:    # for non full fill rectangles
             pygame.draw.rect(screen, self.color, self.rect, weight)
-        else:
+        else:                     # for full fill rectangles
             pygame.draw.rect(screen, self.color, self.rect)
 
-class Timer_display(Rectangle):
+class Timer_display(Rectangle):    # Child of Rectangle for displaying real time game duration
     def __init__(self, x, y, width, height, color, text_color=GREEN, font_size=60):
         super().__init__(x, y, width, height, color)
         self.font = pygame.font.Font(None, font_size)
@@ -24,14 +24,14 @@ class Timer_display(Rectangle):
     
     def draw(self, screen, current_time) -> None:
         current_time_str = str(current_time)
-        if current_time <= 3:
+        if current_time <= 3:  # Color text RED when timer is less than or equal to 3
             text_surf = self.font.render(current_time_str, True, RED)
-        else:
+        else:   # Color text as self.text_color
             text_surf = self.font.render(current_time_str, True, self.text_color)
         text_rect = text_surf.get_rect(center=self.rect.center)
         screen.blit(text_surf, text_rect)
 
-class Button(Rectangle):
+class Button(Rectangle):     # Child of Rectangle that serves as a button with text and hover color change
     def __init__(self, x, y, width, height, text, text_color, color, hover_color, text_hover_color, action = None):
         super().__init__(x, y, width, height, color)
         self.text = text
@@ -41,10 +41,10 @@ class Button(Rectangle):
         self.action = action
         self.text_hover_color = text_hover_color
 
-    def draw(self, screen) -> None:
-        mouse_pos = pygame.mouse.get_pos()
+    def draw(self, screen) -> None:    # Draws button and check for collision for hover effect
+        mouse_pos = pygame.mouse.get_pos()  # get mouse position
         text_surf = None
-        if self.rect.collidepoint(mouse_pos):
+        if self.rect.collidepoint(mouse_pos):  # checks for collison with mouse pos
             pygame.draw.rect(screen, self.hover_color, self.rect)
             text_surf = self.font.render(self.text, True, self.text_hover_color)
         else:
@@ -54,8 +54,8 @@ class Button(Rectangle):
         text_rect = text_surf.get_rect(center=self.rect.center)
         screen.blit(text_surf, text_rect)
 
-    def is_clicked(self, event, screen) -> bool:
-        if self.rect.collidepoint(event.pos):   # check if down is on button
+    def is_clicked(self, event, screen) -> bool:   # Check if button is clicked
+        if self.rect.collidepoint(event.pos):   # check if button down is on button
             if self.action is not None:
                 self.action(screen)
             return True

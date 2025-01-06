@@ -24,7 +24,7 @@ CELL_SIZE = 50     # Directly proportional to the amouont of ships 5 ships: 50
 
 TIME_PER_TURN =  15 # in seconds
 
-# Ship configurations
+# Ship Identifier dict
 SHIPS = {
     "Carrier": 5,
     "Battleship": 4,
@@ -32,6 +32,8 @@ SHIPS = {
     "Submarine": 32,
     "Destroyer": 2
 }
+
+# Ship size dict
 SHIPS_SIZES = {
     "Carrier": 5,
     "Battleship": 4,

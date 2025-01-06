@@ -587,30 +587,35 @@ if __name__ == "__main__":
             else: # if draw
                 draw_sound.play(loops=-1)
 
-            while display_winner:
-                clear_screen(screen)
+            while display_winner:   # Dsipaly winner loop
+                clear_screen(screen)   # clear previous screen
 
-                red_grid.insert(screen)
+                # insert grids, and ship's locations
+                red_grid.insert(screen)  
                 blue_grid.insert(screen)
                 for ship in red_deployed:
                     ship.draw(screen)
                 for ship in blue_deployed:
                     ship.draw(screen)
                 
+                # Button to play again
                 play_again_button = Button(590, 650, 220, 100, "PLAY AGAIN", YELLOW, BLACK, YELLOW, BLACK)
                 font = pygame.font.Font(None, 30)
                 font2 = pygame.font.Font(None, 60)
 
+                # Instruction text
                 play_again_instruction = font.render("-Press Space or Click Button to Play another game-", True, GREEN)
                 play_again_instruction_rect = play_again_instruction.get_rect(center=(SCREEN_WIDTH/2, 500))
                 screen.blit(play_again_instruction, play_again_instruction_rect)
 
+                # Display game duration
                 game_time_render = font2.render(f"{minutes:02d}:{int(game_time_display):02d}", True, BLACK)
                 game_time_render_rect = game_time_render.get_rect(center=(SCREEN_WIDTH/2, 100))
                 screen.blit(game_time_render, game_time_render_rect)
                 
-                play_again_button.draw(screen)
+                play_again_button.draw(screen)  # Insert Button
 
+                # Determine winner text
                 if red_score > blue_score:
                     winner_text = "Red Wins!"
                 elif red_score < blue_score:
@@ -619,10 +624,10 @@ if __name__ == "__main__":
                     winner_text = "Draw!"
                 winner_font = pygame.font.Font(None, 200)
 
+                # Display winner
                 text_surface = winner_font.render(winner_text, True, GREEN)
                 text_rect = text_surface.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
                 screen.blit(text_surface, text_rect)
-
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -638,11 +643,16 @@ if __name__ == "__main__":
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if play_again_button.is_clicked(event, screen):
                             next_game_reset()
+
+                # reset ships to prepare for another game
                 for ship in red_ships:
                     ship.reset()
                 for ship in blue_ships:
                     ship.reset()
-                pygame.display.flip()
+
+                pygame.display.flip()  # update display
+            
+            # stop display winner sounds
             champion_sound.stop()
             draw_sound.stop()
 
