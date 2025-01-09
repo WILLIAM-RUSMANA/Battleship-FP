@@ -27,12 +27,13 @@ Next, press the green code button to clone this repository or download as zip fi
 <img src="/assets/img/clonesnip.png" alt="clone code snippet" width="200" height="200">
 
 Lastly, all you need to run this program is to run the main.py file.
+Check out the project report [here](BattleshipProjectReport.pdf).
+Check out the demo video [here](https://drive.google.com/drive/folders/1VFd7J15M8giqvAj_bfxTlPWpE18KIafz).
 
 <img src="/assets/img/d1.png" alt="clone code snippet" width="350" height="200">
 <img src="/assets/img/d2.png" alt="clone code snippet" width="350" height="200"
 ><img src="/assets/img/d3.png" alt="clone code snippet" width="350" height="200">
 
-Check out the project report [here](BattleshipProjectReport.pdf).
 
 HAVE FUN :)
 
